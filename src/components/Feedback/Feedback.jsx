@@ -1,55 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Buttons from '../Buttons/Buttons';
 import Stats from '../Stats/Stats';
 
-class Feedback extends Component {
-  state = {
+const Feedback = () => {
+  const [feedback, setFeedback] = useState({
     good: 0,
     neutral: 0,
     bad: 0,
-  };
+  });
 
-  onClickAddToStat = value => {
-    this.setState(prevState => {
-      return { [value]: prevState[value] + 1 };
+  const onClickAddToStat = value => {
+    setFeedback(prevState => {
+      return { ...prevState, [value]: prevState[value] + 1 };
     });
   };
 
-  countTotalFeedback = () => {
-    return Object.values(this.state).reduce(
+  const countTotalFeedback = () => {
+    return Object.values(feedback).reduce(
       (prevValue, currValue) => prevValue + currValue,
       0
     );
   };
 
-  countPositiveFeedbackPercentage = () => {
-    return this.countTotalFeedback() > 0
-      ? +((100 / this.countTotalFeedback()) * this.state.good).toFixed()
-      : 0;
+  const countPositiveFeedbackPercentage = total => {
+    return total > 0 ? +((100 / total) * feedback.good).toFixed() : 0;
   };
 
-  render() {
-    return (
-      <Container>
-        <h2>Please leave feedback</h2>
-        <Buttons
-          onClick={this.onClickAddToStat}
-          options={Object.keys(this.state)}
-        />
-        <h2>Statistics</h2>
-        <Stats
-          good={this.state.good}
-          neutral={this.state.neutral}
-          bad={this.state.bad}
-          total={this.countTotalFeedback()}
-          positivePercent={this.countPositiveFeedbackPercentage()}
-        />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <h2>Please leave feedback</h2>
+      <Buttons onClick={onClickAddToStat} options={Object.keys(feedback)} />
+      <h2>Statistics</h2>
+      <Stats
+        good={feedback.good}
+        neutral={feedback.neutral}
+        bad={feedback.bad}
+        total={countTotalFeedback()}
+        positivePercent={countPositiveFeedbackPercentage(countTotalFeedback())}
+      />
+    </Container>
+  );
+};
 
 const Container = styled.div`
   margin: 0 15px;

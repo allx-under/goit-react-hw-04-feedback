@@ -1,29 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+
+import { capitalize } from 'components/services/capitalize';
 import PropTypes from 'prop-types';
 
-const capitalize = s => {
-  if (typeof s !== 'string') return '';
-  return s.charAt(0).toUpperCase() + s.slice(1);
+const Buttons = ({ onClick, options }) => {
+  return (
+    <Wrapper>
+      {options.map(option => (
+        <FeedbackBtnsItem key={option}>
+          <button onClick={() => onClick(option)} value={option}>
+            {capitalize(option)}
+          </button>
+        </FeedbackBtnsItem>
+      ))}
+    </Wrapper>
+  );
 };
-
-class Buttons extends Component {
-  render() {
-    const { onClick, options } = this.props;
-
-    return (
-      <Wrapper>
-        {options.map(option => (
-          <FeedbackBtnsItem key={option}>
-            <button onClick={() => onClick(option)} value={option}>
-              {capitalize(option)}
-            </button>
-          </FeedbackBtnsItem>
-        ))}
-      </Wrapper>
-    );
-  }
-}
 
 export default Buttons;
 
